@@ -1,0 +1,98 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import Link from "next/link"
+
+import type { Job } from "@/lib/jobs-api"
+
+import { STEP_LABELS, listJobs } from "@/lib/jobs-api"
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+export default function JobsHistoryPage() {
+  const [jobs, setJobs] = useState<Job[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    listJobs()
+      .then(setJobs)
+      .catch((e) => setError(String(e)))
+  }, [])
+
+  return (
+    <section className="container flex flex-col gap-6 p-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Job history</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Все прогоны санитизации через API — своих и чужих, без авторизации
+            (см. известные ограничения MVP).
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/jobs/new">New job</Link>
+        </Button>
+      </div>
+
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>Не удалось связаться с jobs API</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {jobs && jobs.length === 0 && (
+        <p className="text-sm text-muted-foreground">
+          Пока ни одного job&apos;а — начни с «New job».
+        </p>
+      )}
+
+      {jobs && jobs.length > 0 && (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Источник</TableHead>
+              <TableHead>Статус</TableHead>
+              <TableHead>Создан</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {jobs.map((j) => (
+              <TableRow key={j.id}>
+                <TableCell className="font-mono text-xs">
+                  <Link href={`/jobs/${j.id}`} className="underline">
+                    {j.id.slice(0, 8)}
+                  </Link>
+                </TableCell>
+                <TableCell>{j.source_id}</TableCell>
+                <TableCell>
+                  {j.status === "done" ? (
+                    <Badge>done</Badge>
+                  ) : j.status === "error" ? (
+                    <Badge variant="destructive">error</Badge>
+                  ) : (
+                    <Badge variant="secondary">{STEP_LABELS[j.status]}</Badge>
+                  )}
+                </TableCell>
+                <TableCell className="text-xs text-muted-foreground">
+                  {new Date(j.created_at).toLocaleString()}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </section>
+  )
+}

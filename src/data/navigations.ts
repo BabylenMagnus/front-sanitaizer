@@ -31,4 +31,19 @@ export const navigationsData: NavigationType[] = [
       },
     ],
   },
+  {
+    title: "Live Jobs (MVP)",
+    items: [
+      {
+        title: "New Job",
+        href: "/jobs/new",
+        iconName: "Play",
+      },
+      {
+        title: "Job History",
+        href: "/jobs",
+        iconName: "History",
+      },
+    ],
+  },
 ]

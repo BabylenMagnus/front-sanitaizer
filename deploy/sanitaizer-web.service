@@ -10,6 +10,12 @@ Environment="PATH=/root/.bun/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/b
 Environment="NODE_ENV=production"
 Environment="PORT=3014"
 Environment="BASE_URL=https://www.sanitaizer.cheesy-pizza.ru"
+Environment="DATABASE_URL=postgresql://postgres:example@127.0.0.1:8021/jobs"
+Environment="BETTER_AUTH_SECRET=470dddf51f626f0e8447fcbdc35d260f47c817906eb6bc9959cc2498a069dca2"
+Environment="BETTER_AUTH_URL=https://www.sanitaizer.cheesy-pizza.ru"
+Environment="NEXT_PUBLIC_BETTER_AUTH_URL=https://www.sanitaizer.cheesy-pizza.ru"
+Environment="JOBS_API_URL=http://127.0.0.1:8020"
+Environment="JOBS_INTERNAL_SECRET=09b5e9067dcff5e577933bd786ec609cbda5ee9a2178b15444b65905c32072f9"
 ExecStart=/root/.bun/bin/bun run start -- -p 3014
 Restart=always
 RestartSec=10
