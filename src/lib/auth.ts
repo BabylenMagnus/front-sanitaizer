@@ -22,6 +22,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
+    // Public self-registration is closed — the platform team provisions the
+    // single admin account via `scripts/create-admin.ts`. This blocks
+    // POST /api/auth/sign-up/email at the server, not just the missing UI.
+    disableSignUp: true,
   },
   plugins: [admin(), nextCookies()],
 })
