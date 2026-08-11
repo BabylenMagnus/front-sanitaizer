@@ -1,0 +1,682 @@
+{
+  "meta": {
+    "generatedAt": "2026-08-11T06:30:10.543578Z",
+    "dataset": "Adventure Works (postgresDBSamples)",
+    "sourceRepo": "https://github.com/BabylenMagnus/pg-sanitizer"
+  },
+  "report": [
+    {
+      "schema": "humanresources",
+      "table": "employee",
+      "column": "nationalidnumber",
+      "entity_type": "US_SSN",
+      "hit_ratio": 1.0,
+      "source": "name-heuristic",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "humanresources",
+      "table": "employee",
+      "column": "organizationnode",
+      "entity_type": "DATE_TIME",
+      "hit_ratio": 0.51,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": false,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "address",
+      "column": "addressline1",
+      "entity_type": "DATE_TIME",
+      "hit_ratio": 0.55,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": false,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "address",
+      "column": "city",
+      "entity_type": "LOCATION",
+      "hit_ratio": 0.28,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "countryregion",
+      "column": "name",
+      "entity_type": "LOCATION",
+      "hit_ratio": 0.71,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "emailaddress",
+      "column": "emailaddress",
+      "entity_type": "EMAIL_ADDRESS",
+      "hit_ratio": 1.0,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": true,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "password",
+      "column": "passwordhash",
+      "entity_type": "PASSWORD_HASH",
+      "hit_ratio": 1.0,
+      "source": "name-heuristic",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "password",
+      "column": "passwordsalt",
+      "entity_type": "PASSWORD_HASH",
+      "hit_ratio": 1.0,
+      "source": "name-heuristic",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "person",
+      "column": "firstname",
+      "entity_type": "PERSON",
+      "hit_ratio": 0.66,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": true,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "person",
+      "column": "lastname",
+      "entity_type": "PERSON",
+      "hit_ratio": 0.29,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": true,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "person",
+      "table": "stateprovince",
+      "column": "name",
+      "entity_type": "LOCATION",
+      "hit_ratio": 0.43,
+      "source": "presidio",
+      "sample_size": 181,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "sales",
+      "table": "creditcard",
+      "column": "cardnumber",
+      "entity_type": "US_BANK_NUMBER",
+      "hit_ratio": 1.0,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "sales",
+      "table": "currency",
+      "column": "name",
+      "entity_type": "ORGANIZATION",
+      "hit_ratio": 0.21,
+      "source": "presidio",
+      "sample_size": 105,
+      "identity_linked": false,
+      "auto_applied": false,
+      "language": "en"
+    },
+    {
+      "schema": "sales",
+      "table": "salesorderdetail",
+      "column": "carriertrackingnumber",
+      "entity_type": "DATE_TIME",
+      "hit_ratio": 0.33,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": false,
+      "language": "en"
+    },
+    {
+      "schema": "sales",
+      "table": "salesorderheader",
+      "column": "accountnumber",
+      "entity_type": "US_DRIVER_LICENSE",
+      "hit_ratio": 1.0,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "sales",
+      "table": "salestaxrate",
+      "column": "name",
+      "entity_type": "NRP",
+      "hit_ratio": 0.52,
+      "source": "presidio",
+      "sample_size": 29,
+      "identity_linked": false,
+      "auto_applied": false,
+      "language": "en"
+    },
+    {
+      "schema": "sales",
+      "table": "salesterritory",
+      "column": "name",
+      "entity_type": "LOCATION",
+      "hit_ratio": 0.5,
+      "source": "presidio",
+      "sample_size": 10,
+      "identity_linked": false,
+      "auto_applied": true,
+      "language": "en"
+    },
+    {
+      "schema": "sales",
+      "table": "store",
+      "column": "name",
+      "entity_type": "ORGANIZATION",
+      "hit_ratio": 0.45,
+      "source": "presidio",
+      "sample_size": 200,
+      "identity_linked": false,
+      "auto_applied": false,
+      "language": "en"
+    }
+  ],
+  "rowCounts": [
+    {
+      "table_name": "humanresources.department",
+      "original_count": 16,
+      "transformed_count": 16
+    },
+    {
+      "table_name": "humanresources.employee",
+      "original_count": 290,
+      "transformed_count": 290
+    },
+    {
+      "table_name": "humanresources.employeedepartmenthistory",
+      "original_count": 296,
+      "transformed_count": 296
+    },
+    {
+      "table_name": "humanresources.employeepayhistory",
+      "original_count": 316,
+      "transformed_count": 316
+    },
+    {
+      "table_name": "humanresources.jobcandidate",
+      "original_count": 13,
+      "transformed_count": 13
+    },
+    {
+      "table_name": "humanresources.shift",
+      "original_count": 3,
+      "transformed_count": 3
+    },
+    {
+      "table_name": "person.address",
+      "original_count": 19614,
+      "transformed_count": 19614
+    },
+    {
+      "table_name": "person.addresstype",
+      "original_count": 6,
+      "transformed_count": 6
+    },
+    {
+      "table_name": "person.businessentity",
+      "original_count": 20777,
+      "transformed_count": 20777
+    },
+    {
+      "table_name": "person.businessentityaddress",
+      "original_count": 19614,
+      "transformed_count": 19614
+    },
+    {
+      "table_name": "person.businessentitycontact",
+      "original_count": 909,
+      "transformed_count": 909
+    },
+    {
+      "table_name": "person.contacttype",
+      "original_count": 20,
+      "transformed_count": 20
+    },
+    {
+      "table_name": "person.countryregion",
+      "original_count": 238,
+      "transformed_count": 238
+    },
+    {
+      "table_name": "person.emailaddress",
+      "original_count": 19972,
+      "transformed_count": 19972
+    },
+    {
+      "table_name": "person.password",
+      "original_count": 19972,
+      "transformed_count": 19972
+    },
+    {
+      "table_name": "person.person",
+      "original_count": 19972,
+      "transformed_count": 19972
+    },
+    {
+      "table_name": "person.personphone",
+      "original_count": 19972,
+      "transformed_count": 19972
+    },
+    {
+      "table_name": "person.phonenumbertype",
+      "original_count": 3,
+      "transformed_count": 3
+    },
+    {
+      "table_name": "person.stateprovince",
+      "original_count": 181,
+      "transformed_count": 181
+    },
+    {
+      "table_name": "sales.countryregioncurrency",
+      "original_count": 109,
+      "transformed_count": 109
+    },
+    {
+      "table_name": "sales.creditcard",
+      "original_count": 19118,
+      "transformed_count": 19118
+    },
+    {
+      "table_name": "sales.currency",
+      "original_count": 105,
+      "transformed_count": 105
+    },
+    {
+      "table_name": "sales.currencyrate",
+      "original_count": 13532,
+      "transformed_count": 13532
+    },
+    {
+      "table_name": "sales.customer",
+      "original_count": 19820,
+      "transformed_count": 19820
+    },
+    {
+      "table_name": "sales.personcreditcard",
+      "original_count": 19118,
+      "transformed_count": 19118
+    },
+    {
+      "table_name": "sales.salesorderdetail",
+      "original_count": 121317,
+      "transformed_count": 121317
+    },
+    {
+      "table_name": "sales.salesorderheader",
+      "original_count": 31465,
+      "transformed_count": 31465
+    },
+    {
+      "table_name": "sales.salesorderheadersalesreason",
+      "original_count": 27647,
+      "transformed_count": 27647
+    },
+    {
+      "table_name": "sales.salesperson",
+      "original_count": 17,
+      "transformed_count": 17
+    },
+    {
+      "table_name": "sales.salespersonquotahistory",
+      "original_count": 163,
+      "transformed_count": 163
+    },
+    {
+      "table_name": "sales.salesreason",
+      "original_count": 10,
+      "transformed_count": 10
+    },
+    {
+      "table_name": "sales.salestaxrate",
+      "original_count": 29,
+      "transformed_count": 29
+    },
+    {
+      "table_name": "sales.salesterritory",
+      "original_count": 10,
+      "transformed_count": 10
+    },
+    {
+      "table_name": "sales.salesterritoryhistory",
+      "original_count": 17,
+      "transformed_count": 17
+    },
+    {
+      "table_name": "sales.shoppingcartitem",
+      "original_count": 3,
+      "transformed_count": 3
+    },
+    {
+      "table_name": "sales.specialoffer",
+      "original_count": 16,
+      "transformed_count": 16
+    },
+    {
+      "table_name": "sales.specialofferproduct",
+      "original_count": 538,
+      "transformed_count": 538
+    },
+    {
+      "table_name": "sales.store",
+      "original_count": 701,
+      "transformed_count": 701
+    }
+  ],
+  "metrics": {
+    "tablesChecked": 38,
+    "rowCountMismatches": 0,
+    "fkConstraintsRestored": 53,
+    "diversityOriginal": {
+      "distinct_city": 575,
+      "total_addresses": 19614
+    },
+    "diversityTransformed": {
+      "distinct_city": 575,
+      "total_addresses": 19614
+    }
+  },
+  "samples": {
+    "original": {
+      "employee": [
+        {
+          "businessentityid": 1,
+          "nationalidnumber": "295847284"
+        },
+        {
+          "businessentityid": 2,
+          "nationalidnumber": "245797967"
+        },
+        {
+          "businessentityid": 3,
+          "nationalidnumber": "509647174"
+        },
+        {
+          "businessentityid": 4,
+          "nationalidnumber": "112457891"
+        },
+        {
+          "businessentityid": 5,
+          "nationalidnumber": "695256908"
+        }
+      ],
+      "identity": [
+        {
+          "businessentityid": 1,
+          "firstname": "Ken",
+          "lastname": "Sánchez",
+          "emailaddress": "ken0@adventure-works.com"
+        },
+        {
+          "businessentityid": 2,
+          "firstname": "Terri",
+          "lastname": "Duffy",
+          "emailaddress": "terri0@adventure-works.com"
+        },
+        {
+          "businessentityid": 3,
+          "firstname": "Roberto",
+          "lastname": "Tamburello",
+          "emailaddress": "roberto0@adventure-works.com"
+        },
+        {
+          "businessentityid": 4,
+          "firstname": "Rob",
+          "lastname": "Walters",
+          "emailaddress": "rob0@adventure-works.com"
+        },
+        {
+          "businessentityid": 5,
+          "firstname": "Gail",
+          "lastname": "Erickson",
+          "emailaddress": "gail0@adventure-works.com"
+        }
+      ],
+      "creditcard": [
+        {
+          "creditcardid": 1,
+          "cardnumber": "33332664695310"
+        },
+        {
+          "creditcardid": 2,
+          "cardnumber": "55552127249722"
+        },
+        {
+          "creditcardid": 3,
+          "cardnumber": "77778344838353"
+        },
+        {
+          "creditcardid": 4,
+          "cardnumber": "77774915718248"
+        },
+        {
+          "creditcardid": 5,
+          "cardnumber": "11114404600042"
+        }
+      ],
+      "address_city": [
+        {
+          "addressid": 1,
+          "city": "Bothell"
+        },
+        {
+          "addressid": 2,
+          "city": "Bothell"
+        },
+        {
+          "addressid": 3,
+          "city": "Bothell"
+        },
+        {
+          "addressid": 4,
+          "city": "Bothell"
+        },
+        {
+          "addressid": 5,
+          "city": "Bothell"
+        }
+      ],
+      "salesorderheader": [
+        {
+          "salesorderid": 43659,
+          "accountnumber": "10-4020-000676"
+        },
+        {
+          "salesorderid": 43660,
+          "accountnumber": "10-4020-000117"
+        },
+        {
+          "salesorderid": 43661,
+          "accountnumber": "10-4020-000442"
+        },
+        {
+          "salesorderid": 43662,
+          "accountnumber": "10-4020-000227"
+        },
+        {
+          "salesorderid": 43663,
+          "accountnumber": "10-4020-000510"
+        }
+      ]
+    },
+    "transformed": {
+      "employee": [
+        {
+          "businessentityid": 1,
+          "nationalidnumber": "112-62-0444"
+        },
+        {
+          "businessentityid": 2,
+          "nationalidnumber": "012-52-9600"
+        },
+        {
+          "businessentityid": 3,
+          "nationalidnumber": "091-57-3414"
+        },
+        {
+          "businessentityid": 4,
+          "nationalidnumber": "459-04-2521"
+        },
+        {
+          "businessentityid": 5,
+          "nationalidnumber": "670-03-4670"
+        }
+      ],
+      "identity": [
+        {
+          "businessentityid": 1,
+          "firstname": "Brandi",
+          "lastname": "Hernandez",
+          "emailaddress": "brandi.hernandez@example.test"
+        },
+        {
+          "businessentityid": 2,
+          "firstname": "Tony",
+          "lastname": "Boyd",
+          "emailaddress": "tony.boyd@example.test"
+        },
+        {
+          "businessentityid": 3,
+          "firstname": "Amber",
+          "lastname": "Ramos",
+          "emailaddress": "amber.ramos@example.test"
+        },
+        {
+          "businessentityid": 4,
+          "firstname": "Jennifer",
+          "lastname": "Brown",
+          "emailaddress": "jennifer.brown@example.test"
+        },
+        {
+          "businessentityid": 5,
+          "firstname": "Samantha",
+          "lastname": "Ramirez",
+          "emailaddress": "samantha.ramirez@example.test"
+        }
+      ],
+      "creditcard": [
+        {
+          "creditcardid": 1,
+          "cardnumber": "3504993651467095"
+        },
+        {
+          "creditcardid": 2,
+          "cardnumber": "374598576546445"
+        },
+        {
+          "creditcardid": 3,
+          "cardnumber": "6011001261762753"
+        },
+        {
+          "creditcardid": 4,
+          "cardnumber": "4523949064874645"
+        },
+        {
+          "creditcardid": 5,
+          "cardnumber": "3538790302931655"
+        }
+      ],
+      "address_city": [
+        {
+          "addressid": 1,
+          "city": "Jimmyview"
+        },
+        {
+          "addressid": 2,
+          "city": "Jimmyview"
+        },
+        {
+          "addressid": 3,
+          "city": "Jimmyview"
+        },
+        {
+          "addressid": 4,
+          "city": "Jimmyview"
+        },
+        {
+          "addressid": 5,
+          "city": "Jimmyview"
+        }
+      ],
+      "salesorderheader": [
+        {
+          "salesorderid": 43659,
+          "accountnumber": "LH97249091"
+        },
+        {
+          "salesorderid": 43660,
+          "accountnumber": "LC94593318"
+        },
+        {
+          "salesorderid": 43661,
+          "accountnumber": "MO74114223"
+        },
+        {
+          "salesorderid": 43662,
+          "accountnumber": "ZV35309577"
+        },
+        {
+          "salesorderid": 43663,
+          "accountnumber": "YI95237160"
+        }
+      ]
+    }
+  },
+  "logs": {
+    "detector": " Container db-sanitization-playground-db-1  Running\n Container db-sanitization-playground-db-1  Waiting\n Container db-sanitization-playground-db-1  Healthy\n Container db-sanitization-playground-dbs-filler-1  Starting\n Container db-sanitization-playground-dbs-filler-1  Started\ndetector: 18 PII columns found across 3 schemas (12 auto-applied, 6 flagged for human review only)\n",
+    "generator": " Container db-sanitization-mapping-store-1  Running\n Container db-sanitization-playground-db-1  Running\n Container db-sanitization-playground-db-1  Waiting\n Container db-sanitization-playground-db-1  Healthy\n Container db-sanitization-playground-dbs-filler-1  Starting\n Container db-sanitization-playground-dbs-filler-1  Started\n Container db-sanitization-playground-dbs-filler-1  Waiting\n Container db-sanitization-playground-dbs-filler-1  Exited\n Container db-sanitization-detector-1  Starting\n Container db-sanitization-detector-1  Started\n/usr/local/lib/python3.12/site-packages/langgraph/checkpoint/base/__init__.py:18: LangChainPendingDeprecationWarning: The default value of `allowed_objects` will change in a future version. Pass an explicit value (e.g., allowed_objects='messages' or allowed_objects='core') to suppress this warning.\n  from langgraph.checkpoint.serde.jsonplus import JsonPlusSerializer\ngenerator: OPENAI_API_KEY not set, using local Faker fallback backend\ngenerator: 9 plain columns, 3 identity-linked columns\ngenerator: humanresources.employee.nationalidnumber -> 290 distinct values mapped (full coverage)\ngenerator: person.address.city -> 575 distinct values mapped (full coverage)\ngenerator: person.countryregion.name -> 238 distinct values mapped (full coverage)\ngenerator: person.password.passwordhash -> 19972 distinct values mapped (full coverage)\ngenerator: person.password.passwordsalt -> 19972 distinct values mapped (full coverage)\ngenerator: person.stateprovince.name -> 181 distinct values mapped (full coverage)\ngenerator: sales.creditcard.cardnumber -> 19118 distinct values mapped (full coverage)\ngenerator: sales.salesorderheader.accountnumber -> 19119 distinct values mapped (full coverage)\ngenerator: sales.salesterritory.name -> 10 distinct values mapped (full coverage)\ngenerator: 19972 identity bundles generated (businessentityid-linked)\ngenerator: persisted 79475 value mappings + 19972 identity bundles to Redis\n",
+    "dump": " Container db-sanitization-mapping-store-1  Running\n Container db-sanitization-playground-db-1  Running\n Container db-sanitization-generator-1  Recreate\n Container db-sanitization-generator-1  Recreated\n Container db-sanitization-playground-db-1  Waiting\n Container db-sanitization-playground-db-1  Healthy\n Container db-sanitization-playground-dbs-filler-1  Starting\n Container db-sanitization-playground-dbs-filler-1  Started\n Container db-sanitization-playground-dbs-filler-1  Waiting\n Container db-sanitization-playground-dbs-filler-1  Exited\n Container db-sanitization-detector-1  Starting\n Container db-sanitization-detector-1  Started\n Container db-sanitization-detector-1  Waiting\n Container db-sanitization-detector-1  Exited\n Container db-sanitization-generator-1  Starting\n Container db-sanitization-generator-1  Started\nmerge_config: wrote /var/lib/greenmask/config.generated.yml\n",
+    "restore": " Container db-sanitization-playground-db-1  Running\n Container db-sanitization-mapping-store-1  Running\n Container db-sanitization-playground-db-1  Waiting\n Container db-sanitization-playground-db-1  Healthy\n Container db-sanitization-playground-dbs-filler-1  Starting\n Container db-sanitization-playground-dbs-filler-1  Started\n Container db-sanitization-playground-dbs-filler-1  Waiting\n Container db-sanitization-playground-dbs-filler-1  Exited\n Container db-sanitization-detector-1  Starting\n Container db-sanitization-detector-1  Started\n Container db-sanitization-detector-1  Waiting\n Container db-sanitization-detector-1  Exited\n Container db-sanitization-generator-1  Starting\n Container db-sanitization-generator-1  Started\nmerge_config: wrote /var/lib/greenmask/config.generated.yml\n\u001b[90m2026-08-11T05:36:47Z\u001b[0m \u001b[32mINF\u001b[0m \u001b[1mrestoring dump\u001b[0m \u001b[36mdumpId=\u001b[0m1786426439371\n"
+  }
+}

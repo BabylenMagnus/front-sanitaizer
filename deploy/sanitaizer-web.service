@@ -1,0 +1,18 @@
+[Unit]
+Description=Sanitaizer web report (Next.js via Bun)
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/sanitaizer-web
+Environment="PATH=/root/.bun/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="NODE_ENV=production"
+Environment="PORT=3014"
+Environment="BASE_URL=https://www.sanitaizer.cheesy-pizza.ru"
+ExecStart=/root/.bun/bin/bun run start -- -p 3014
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
