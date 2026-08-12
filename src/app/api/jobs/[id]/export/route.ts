@@ -16,9 +16,10 @@ export async function GET(
     const { searchParams } = new URL(req.url)
     const table = searchParams.get("table") || ""
     const qs = new URLSearchParams({ table })
-    const res = await fetch(jobsApiUrl(`/api/jobs/${id}/export?${qs.toString()}`), {
-      headers: authHeaders,
-    })
+    const res = await fetch(
+      jobsApiUrl(`/api/jobs/${id}/export?${qs.toString()}`),
+      { headers: authHeaders }
+    )
     if (!res.ok) {
       return NextResponse.json(
         { error: `export failed: ${res.status}` },

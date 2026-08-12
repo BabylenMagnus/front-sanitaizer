@@ -306,7 +306,8 @@ function TablesBrowser({ jobId }: { jobId: string }) {
       .then((list) => {
         setTables(list)
         const firstChanged = list.find((t) => t.changed) ?? list[0]
-        if (firstChanged) setSelected(`${firstChanged.schema}.${firstChanged.table}`)
+        if (firstChanged)
+          setSelected(`${firstChanged.schema}.${firstChanged.table}`)
       })
       .catch((e) => setTablesError(String(e)))
   }, [jobId])
@@ -354,9 +355,7 @@ function TablesBrowser({ jobId }: { jobId: string }) {
                   }`}
                 >
                   <span className="font-mono">{key}</span>
-                  <span className="text-muted-foreground">
-                    ({t.row_count})
-                  </span>
+                  <span className="text-muted-foreground">({t.row_count})</span>
                   {t.changed ? (
                     <Badge variant="secondary" className="h-4 px-1 text-[10px]">
                       изменено
@@ -398,7 +397,10 @@ function TablesBrowser({ jobId }: { jobId: string }) {
               <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
                 Исходные данные
               </p>
-              <PreviewTable columns={preview.columns} rows={preview.original_rows} />
+              <PreviewTable
+                columns={preview.columns}
+                rows={preview.original_rows}
+              />
             </div>
             <div>
               <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
