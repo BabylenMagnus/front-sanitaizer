@@ -19,6 +19,19 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${Math.round(seconds)}с`
+  const m = Math.floor(seconds / 60)
+  const s = Math.round(seconds % 60)
+  return `${m}м ${s}с`
+}
+
+function jobDuration(j: Job): string {
+  if (!j.started_at) return "—"
+  const end = j.finished_at ? new Date(j.finished_at).getTime() : Date.now()
+  return formatDuration((end - new Date(j.started_at).getTime()) / 1000)
+}
+
 export default function JobsHistoryPage() {
   const [jobs, setJobs] = useState<Job[] | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -64,6 +77,7 @@ export default function JobsHistoryPage() {
               <TableHead>ID</TableHead>
               <TableHead>Источник</TableHead>
               <TableHead>Статус</TableHead>
+              <TableHead>Длительность</TableHead>
               <TableHead>Создан</TableHead>
             </TableRow>
           </TableHeader>
@@ -84,6 +98,9 @@ export default function JobsHistoryPage() {
                   ) : (
                     <Badge variant="secondary">{STEP_LABELS[j.status]}</Badge>
                   )}
+                </TableCell>
+                <TableCell className="font-mono text-xs text-muted-foreground">
+                  {jobDuration(j)}
                 </TableCell>
                 <TableCell className="text-xs text-muted-foreground">
                   {new Date(j.created_at).toLocaleString()}

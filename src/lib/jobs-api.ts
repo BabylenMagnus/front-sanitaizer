@@ -31,6 +31,12 @@ export interface JobResult {
   findings: Finding[]
 }
 
+export interface StepTiming {
+  started_at: string
+  finished_at?: string
+  duration_seconds?: number
+}
+
 export interface Job {
   id: string
   source_id: string
@@ -48,6 +54,9 @@ export interface Job {
   result: JobResult | null
   created_at: string
   updated_at: string
+  started_at: string | null
+  finished_at: string | null
+  step_timings: Record<string, StepTiming>
 }
 
 async function unwrap<T>(res: Response): Promise<T> {

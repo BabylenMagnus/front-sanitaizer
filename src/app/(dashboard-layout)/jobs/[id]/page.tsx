@@ -25,11 +25,24 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${Math.round(seconds)}с`
+  const m = Math.floor(seconds / 60)
+  const s = Math.round(seconds % 60)
+  return `${m}м ${s}с`
+}
+
 export default function JobDetailPage() {
   const params = useParams<{ id: string }>()
   const [job, setJob] = useState<Job | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [now, setNow] = useState(() => Date.now())
   const logsRef = useRef<HTMLPreElement>(null)
+
+  useEffect(() => {
+    const tick = setInterval(() => setNow(Date.now()), 1000)
+    return () => clearInterval(tick)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -64,6 +77,15 @@ export default function JobDetailPage() {
   }, [job?.logs])
 
   const currentStepIndex = job ? STEP_ORDER.indexOf(job.status) : -1
+  const isRunning = job && job.status !== "done" && job.status !== "error"
+  const sinceUpdateSeconds = job
+    ? Math.max(0, (now - new Date(job.updated_at).getTime()) / 1000)
+    : 0
+  const totalSeconds = job?.started_at
+    ? ((job.finished_at ? new Date(job.finished_at).getTime() : now) -
+        new Date(job.started_at).getTime()) /
+      1000
+    : null
 
   return (
     <section className="container flex flex-col gap-6 p-4">
@@ -94,8 +116,14 @@ export default function JobDetailPage() {
                 <StatusBadge status={job.status} />
               </CardTitle>
               <CardDescription>
-                Источник: {job.source_id}. Обновлено:{" "}
-                {new Date(job.updated_at).toLocaleString()}
+                Источник: {job.source_id}
+                {totalSeconds !== null && (
+                  <>
+                    {" "}
+                    · {job.finished_at ? "заняло" : "идёт"}{" "}
+                    {formatDuration(totalSeconds)}
+                  </>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -112,12 +140,60 @@ export default function JobDetailPage() {
                   />
                 ))}
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Шаг {Math.max(currentStepIndex, 0) + 1} из {STEP_ORDER.length}:
-                пайплайн выполняется целиком (detector → generator → dump →
-                restore), прогресс — по шагам, не по таблицам внутри шага — см.
-                известные ограничения MVP.
-              </p>
+              <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                <span>
+                  Шаг {Math.max(currentStepIndex, 0) + 1} из{" "}
+                  {STEP_ORDER.length}: пайплайн выполняется целиком (detector →
+                  generator → dump → restore), прогресс — по шагам, не по
+                  таблицам внутри шага — см. известные ограничения MVP.
+                </span>
+              </div>
+              {isRunning && (
+                <p className="mt-1 text-xs">
+                  {sinceUpdateSeconds < 20 ? (
+                    <span className="text-emerald-500">
+                      ● живой процесс — активность {Math.round(sinceUpdateSeconds)}с назад
+                    </span>
+                  ) : (
+                    <span className="text-amber-500">
+                      ● нет обновлений уже {formatDuration(sinceUpdateSeconds)} — возможно, зависло
+                    </span>
+                  )}
+                </p>
+              )}
+
+              <div className="mt-4 flex flex-col gap-1.5 border-t pt-3">
+                {STEP_ORDER.filter((s) => s !== "queued" && s !== "done").map(
+                  (step) => {
+                    const t = job.step_timings?.[step]
+                    return (
+                      <div
+                        key={step}
+                        className="flex items-center justify-between text-xs"
+                      >
+                        <span
+                          className={
+                            job.status === step
+                              ? "font-medium text-foreground"
+                              : "text-muted-foreground"
+                          }
+                        >
+                          {STEP_LABELS[step]}
+                        </span>
+                        <span className="font-mono text-muted-foreground">
+                          {t?.duration_seconds !== undefined
+                            ? formatDuration(t.duration_seconds)
+                            : t?.started_at
+                              ? `${formatDuration(
+                                  (now - new Date(t.started_at).getTime()) / 1000
+                                )}…`
+                              : "—"}
+                        </span>
+                      </div>
+                    )
+                  }
+                )}
+              </div>
             </CardContent>
           </Card>
 
