@@ -123,6 +123,13 @@ export function jobTableExportUrl(jobId: string, table: string): string {
   return `/api/jobs/${jobId}/export?${qs.toString()}`
 }
 
+/** Drops the job's sanitized-copy database entirely — irreversible, meant
+ * to be called right after the user has exported what they needed. The job
+ * row, logs, and findings summary stay around; only the data is gone. */
+export async function deleteJobTarget(jobId: string): Promise<void> {
+  await unwrap(await fetch(`/api/jobs/${jobId}/target`, { method: "DELETE" }))
+}
+
 export async function registerDsnSource(input: {
   label: string
   host: string

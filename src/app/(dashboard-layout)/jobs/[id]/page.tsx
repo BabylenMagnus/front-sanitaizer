@@ -8,6 +8,7 @@ import type { Job, JobTable, TablePreview } from "@/lib/jobs-api"
 import {
   STEP_LABELS,
   STEP_ORDER,
+  deleteJobTarget,
   getJob,
   jobTableExportUrl,
   listJobTables,
@@ -300,6 +301,12 @@ function TablesBrowser({ jobId }: { jobId: string }) {
   const [preview, setPreview] = useState<TablePreview | null>(null)
   const [previewError, setPreviewError] = useState<string | null>(null)
   const [previewLoading, setPreviewLoading] = useState(false)
+  const [deleted, setDeleted] = useState(false)
+  const [deleteConfirming, setDeleteConfirming] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [deleteAfterExport, setDeleteAfterExport] = useState(false)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     listJobTables(jobId)
@@ -309,8 +316,53 @@ function TablesBrowser({ jobId }: { jobId: string }) {
         if (firstChanged)
           setSelected(`${firstChanged.schema}.${firstChanged.table}`)
       })
-      .catch((e) => setTablesError(String(e)))
+      .catch((e) => {
+        // 410 means the data was already deleted (manually, or by the
+        // 1-day/low-disk cleanup job) — show that plainly, not as an error.
+        if (String(e).includes("410")) setDeleted(true)
+        else setTablesError(String(e))
+      })
   }, [jobId])
+
+  async function handleExport() {
+    if (!selected) return
+    setExporting(true)
+    setDeleteError(null)
+    try {
+      const res = await fetch(jobTableExportUrl(jobId, selected))
+      if (!res.ok) throw new Error(`не удалось скачать: ${res.status}`)
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `${selected.replace(".", "_")}_sanitized.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+
+      if (deleteAfterExport) await handleDelete()
+    } catch (e) {
+      setDeleteError(String(e))
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  async function handleDelete() {
+    setDeleting(true)
+    setDeleteError(null)
+    try {
+      await deleteJobTarget(jobId)
+      setDeleted(true)
+      setTables(null)
+      setPreview(null)
+      setSelected(null)
+    } catch (e) {
+      setDeleteError(String(e))
+    } finally {
+      setDeleting(false)
+      setDeleteConfirming(false)
+    }
+  }
 
   useEffect(() => {
     if (!selected) return
@@ -322,6 +374,27 @@ function TablesBrowser({ jobId }: { jobId: string }) {
       .finally(() => setPreviewLoading(false))
   }, [jobId, selected])
 
+  if (deleted) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Таблицы санитизированной базы</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Alert>
+            <AlertTitle>Данные удалены</AlertTitle>
+            <AlertDescription>
+              Санитизированная копия для этой задачи удалена — вручную или
+              автоматической очисткой (старше суток либо по нехватке места).
+              Логи и найденные PII-колонки выше остаются доступны, сами
+              данные — нет.
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -329,7 +402,9 @@ function TablesBrowser({ jobId }: { jobId: string }) {
         <CardDescription>
           Все таблицы в результате прогона — какие были изменены, какие нет.
           Выбери таблицу, чтобы увидеть строки «до / после», или скачай её
-          целиком в CSV.
+          целиком в CSV. Данные автоматически удаляются через сутки или при
+          нехватке места на диске — если больше не нужны, можно удалить
+          сразу.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
@@ -368,15 +443,28 @@ function TablesBrowser({ jobId }: { jobId: string }) {
         )}
 
         {selected && (
-          <div className="flex items-center justify-between gap-2 border-t pt-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3">
             <span className="font-mono text-xs text-muted-foreground">
               {selected}
             </span>
-            <Button asChild size="sm" variant="outline">
-              <a href={jobTableExportUrl(jobId, selected)} download>
-                Скачать CSV (санитизированные данные)
-              </a>
-            </Button>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <input
+                  type="checkbox"
+                  checked={deleteAfterExport}
+                  onChange={(e) => setDeleteAfterExport(e.target.checked)}
+                />
+                удалить данные сразу после скачивания
+              </label>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={exporting}
+                onClick={handleExport}
+              >
+                {exporting ? "Скачиваю…" : "Скачать CSV"}
+              </Button>
+            </div>
           </div>
         )}
 
@@ -413,6 +501,50 @@ function TablesBrowser({ jobId }: { jobId: string }) {
             </div>
           </div>
         )}
+
+        {deleteError && (
+          <Alert variant="destructive">
+            <AlertTitle>Не удалось удалить данные</AlertTitle>
+            <AlertDescription>{deleteError}</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="flex justify-end border-t pt-3">
+          {!deleteConfirming ? (
+            <Button
+              size="sm"
+              variant="outline"
+              className="text-destructive hover:text-destructive"
+              onClick={() => setDeleteConfirming(true)}
+            >
+              Удалить санитизированные данные
+            </Button>
+          ) : (
+            <div className="flex items-center gap-3 rounded-md border border-destructive/40 bg-destructive/5 p-3">
+              <span className="text-sm">
+                Удалить все санитизированные данные этой задачи безвозвратно?
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setDeleteConfirming(false)}
+                  disabled={deleting}
+                >
+                  Отмена
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={deleting}
+                  onClick={handleDelete}
+                >
+                  {deleting ? "Удаляю…" : "Удалить"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   )
