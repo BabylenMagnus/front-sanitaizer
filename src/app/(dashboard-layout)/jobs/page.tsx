@@ -50,8 +50,7 @@ export default function JobsHistoryPage() {
             История задач
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Все прогоны санитизации через API — своих и чужих, без авторизации
-            (см. известные ограничения MVP).
+            Все прогоны санитизации через API — своих и чужих.
           </p>
         </div>
         <Button asChild>

@@ -144,8 +144,7 @@ export default function JobDetailPage() {
                 <span>
                   Шаг {Math.max(currentStepIndex, 0) + 1} из {STEP_ORDER.length}
                   : пайплайн выполняется целиком (detector → generator → dump →
-                  restore), прогресс — по шагам, не по таблицам внутри шага —
-                  см. известные ограничения MVP.
+                  restore), прогресс — по шагам, не по таблицам внутри шага.
                 </span>
               </div>
               {isRunning && (
