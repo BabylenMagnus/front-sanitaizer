@@ -3,12 +3,20 @@
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "next/navigation"
 
-import type { Job } from "@/lib/jobs-api"
+import type { Job, JobTable, TablePreview } from "@/lib/jobs-api"
 
-import { STEP_LABELS, STEP_ORDER, getJob } from "@/lib/jobs-api"
+import {
+  STEP_LABELS,
+  STEP_ORDER,
+  getJob,
+  jobTableExportUrl,
+  listJobTables,
+  previewJobTable,
+} from "@/lib/jobs-api"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -255,6 +263,8 @@ export default function JobDetailPage() {
             </Card>
           )}
 
+          {job.status === "done" && <TablesBrowser jobId={job.id} />}
+
           <Card>
             <CardHeader>
               <CardTitle className="text-base">Логи</CardTitle>
@@ -281,4 +291,163 @@ function StatusBadge({ status }: { status: Job["status"] }) {
   if (status === "done") return <Badge>готово</Badge>
   if (status === "error") return <Badge variant="destructive">ошибка</Badge>
   return <Badge variant="secondary">выполняется</Badge>
+}
+
+function TablesBrowser({ jobId }: { jobId: string }) {
+  const [tables, setTables] = useState<JobTable[] | null>(null)
+  const [tablesError, setTablesError] = useState<string | null>(null)
+  const [selected, setSelected] = useState<string | null>(null)
+  const [preview, setPreview] = useState<TablePreview | null>(null)
+  const [previewError, setPreviewError] = useState<string | null>(null)
+  const [previewLoading, setPreviewLoading] = useState(false)
+
+  useEffect(() => {
+    listJobTables(jobId)
+      .then((list) => {
+        setTables(list)
+        const firstChanged = list.find((t) => t.changed) ?? list[0]
+        if (firstChanged) setSelected(`${firstChanged.schema}.${firstChanged.table}`)
+      })
+      .catch((e) => setTablesError(String(e)))
+  }, [jobId])
+
+  useEffect(() => {
+    if (!selected) return
+    setPreviewLoading(true)
+    setPreviewError(null)
+    previewJobTable(jobId, selected, 20)
+      .then(setPreview)
+      .catch((e) => setPreviewError(String(e)))
+      .finally(() => setPreviewLoading(false))
+  }, [jobId, selected])
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Таблицы санитизированной базы</CardTitle>
+        <CardDescription>
+          Все таблицы в результате прогона — какие были изменены, какие нет.
+          Выбери таблицу, чтобы увидеть строки «до / после», или скачай её
+          целиком в CSV.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        {tablesError && (
+          <Alert variant="destructive">
+            <AlertTitle>Не удалось загрузить список таблиц</AlertTitle>
+            <AlertDescription>{tablesError}</AlertDescription>
+          </Alert>
+        )}
+
+        {tables && (
+          <div className="flex flex-wrap gap-1.5">
+            {tables.map((t) => {
+              const key = `${t.schema}.${t.table}`
+              return (
+                <button
+                  key={key}
+                  onClick={() => setSelected(key)}
+                  className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs transition-colors ${
+                    selected === key
+                      ? "border-primary bg-primary/5"
+                      : "hover:bg-muted/50"
+                  }`}
+                >
+                  <span className="font-mono">{key}</span>
+                  <span className="text-muted-foreground">
+                    ({t.row_count})
+                  </span>
+                  {t.changed ? (
+                    <Badge variant="secondary" className="h-4 px-1 text-[10px]">
+                      изменено
+                    </Badge>
+                  ) : null}
+                </button>
+              )
+            })}
+          </div>
+        )}
+
+        {selected && (
+          <div className="flex items-center justify-between gap-2 border-t pt-3">
+            <span className="font-mono text-xs text-muted-foreground">
+              {selected}
+            </span>
+            <Button asChild size="sm" variant="outline">
+              <a href={jobTableExportUrl(jobId, selected)} download>
+                Скачать CSV (санитизированные данные)
+              </a>
+            </Button>
+          </div>
+        )}
+
+        {previewError && (
+          <Alert variant="destructive">
+            <AlertTitle>Не удалось загрузить превью</AlertTitle>
+            <AlertDescription>{previewError}</AlertDescription>
+          </Alert>
+        )}
+
+        {previewLoading && (
+          <p className="text-sm text-muted-foreground">Загружаю превью…</p>
+        )}
+
+        {preview && !previewLoading && (
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div>
+              <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
+                Исходные данные
+              </p>
+              <PreviewTable columns={preview.columns} rows={preview.original_rows} />
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
+                После трансформации
+              </p>
+              <PreviewTable
+                columns={preview.columns}
+                rows={preview.transformed_rows}
+              />
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+function PreviewTable({
+  columns,
+  rows,
+}: {
+  columns: string[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  rows: Record<string, any>[]
+}) {
+  return (
+    <div className="max-h-96 overflow-auto rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {columns.map((c) => (
+              <TableHead key={c} className="font-mono text-xs">
+                {c}
+              </TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.map((row, i) => (
+            <TableRow key={i}>
+              {columns.map((c) => (
+                <TableCell key={c} className="font-mono text-xs">
+                  {String(row[c])}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
 }

@@ -87,6 +87,42 @@ export async function listJobs(): Promise<Job[]> {
   return unwrap(await fetch("/api/jobs"))
 }
 
+export interface JobTable {
+  schema: string
+  table: string
+  row_count: number
+  changed: boolean
+}
+
+export async function listJobTables(jobId: string): Promise<JobTable[]> {
+  return unwrap(await fetch(`/api/jobs/${jobId}/tables`))
+}
+
+export interface TablePreview {
+  columns: string[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  original_rows: Record<string, any>[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  transformed_rows: Record<string, any>[]
+}
+
+export async function previewJobTable(
+  jobId: string,
+  table: string,
+  limit = 20
+): Promise<TablePreview> {
+  const qs = new URLSearchParams({ table, limit: String(limit) })
+  return unwrap(await fetch(`/api/jobs/${jobId}/preview?${qs.toString()}`))
+}
+
+/** Not a fetch wrapper — this is a plain URL for an `<a href>` download
+ * link. The browser's own cookie-based session auth covers it the same as
+ * any same-origin navigation; no need to route it through fetch/unwrap. */
+export function jobTableExportUrl(jobId: string, table: string): string {
+  const qs = new URLSearchParams({ table })
+  return `/api/jobs/${jobId}/export?${qs.toString()}`
+}
+
 export async function registerDsnSource(input: {
   label: string
   host: string
