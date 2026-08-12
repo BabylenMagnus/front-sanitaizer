@@ -61,7 +61,7 @@ export interface Job {
 
 async function unwrap<T>(res: Response): Promise<T> {
   if (res.status === 401) throw new Error("не авторизован — зайди на /login")
-  if (!res.ok) throw new Error(`request failed: ${res.status}`)
+  if (!res.ok) throw new Error(`запрос не выполнен: ${res.status}`)
   return res.json()
 }
 
@@ -117,13 +117,13 @@ export async function uploadDumpSource(
 }
 
 export const STEP_LABELS: Record<Job["status"], string> = {
-  queued: "Queued",
-  detecting: "Detecting PII (Presidio)",
-  generating: "Generating replacements (LangGraph)",
-  dumping: "Dumping with sanitization (Greenmask)",
-  restoring: "Restoring into transformed DB (Greenmask)",
-  done: "Done",
-  error: "Error",
+  queued: "В очереди",
+  detecting: "Поиск PII (Presidio)",
+  generating: "Генерация замен (LangGraph)",
+  dumping: "Дамп с санитизацией (Greenmask)",
+  restoring: "Восстановление в новую БД (Greenmask)",
+  done: "Готово",
+  error: "Ошибка",
 }
 
 export const STEP_ORDER: Job["status"][] = [

@@ -132,14 +132,14 @@ export function CommandMenu({ buttonClassName, ...props }: CommandMenuProps) {
         {...props}
       >
         <Search className="me-2 h-4 w-4" />
-        <span>Search...</span>
+        <span>Поиск...</span>
         <Keyboard className="ms-auto">K</Keyboard>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen} {...props}>
-        <DialogTitle className="sr-only">Search Menu</DialogTitle>
-        <CommandInput placeholder="Type a command or search..." />
+        <DialogTitle className="sr-only">Меню поиска</DialogTitle>
+        <CommandInput placeholder="Введите команду или запрос..." />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>Ничего не найдено.</CommandEmpty>
           <ScrollArea className="h-[300px] max-h-[300px]">
             {navigationsData.map((nav) => (
               <CommandGroup

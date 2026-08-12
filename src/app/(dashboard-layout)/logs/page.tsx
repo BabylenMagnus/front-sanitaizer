@@ -15,24 +15,23 @@ const SECTIONS: {
     key: "detector",
     title: "detector",
     description:
-      "Presidio scan of Adventure Works — column-by-column classification.",
+      "Сканирование Adventure Works Presidio — классификация колонка за колонкой.",
   },
   {
     key: "generator",
     title: "generator",
     description:
-      "LangGraph offline generation pipeline — pre-populating the Redis mapping store.",
+      "Офлайн-пайплайн генерации LangGraph — предварительное заполнение mapping store в Redis.",
   },
   {
     key: "dump",
     title: "greenmask dump",
-    description:
-      "Streaming dump of `original` with anonymization applied on the fly.",
+    description: "Потоковый дамп `original` с анонимизацией на лету.",
   },
   {
     key: "restore",
     title: "greenmask restore",
-    description: "Restore into a from-scratch `transformed` database.",
+    description: "Восстановление в базу `transformed`, созданную с нуля.",
   },
 ]
 
@@ -40,10 +39,12 @@ export default function LogsPage() {
   return (
     <section className="container flex flex-col gap-6 p-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Pipeline Logs</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Логи пайплайна
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Raw stdout/stderr from the last verified end-to-end run, in pipeline
-          order.
+          Необработанный stdout/stderr последнего проверенного сквозного
+          прогона, в порядке выполнения пайплайна.
         </p>
       </div>
 
@@ -59,7 +60,7 @@ export default function LogsPage() {
           </CardHeader>
           <CardContent>
             <pre className="max-h-96 overflow-auto rounded-md bg-muted p-4 text-xs">
-              {data.logs[section.key] || "(empty)"}
+              {data.logs[section.key] || "(пусто)"}
             </pre>
           </CardContent>
         </Card>

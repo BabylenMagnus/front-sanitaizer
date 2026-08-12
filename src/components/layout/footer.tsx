@@ -21,7 +21,7 @@ export function Footer() {
           .
         </p>
         <p className="text-xs text-muted-foreground md:text-sm">
-          Designed & Developed by{" "}
+          Дизайн и разработка —{" "}
           <a
             href="https://github.com/Qualiora"
             target="_blank"

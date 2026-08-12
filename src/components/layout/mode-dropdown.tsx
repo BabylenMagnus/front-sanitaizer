@@ -39,25 +39,25 @@ export function ModeDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Mode">
+        <Button variant="ghost" size="icon" aria-label="Тема">
           <ModeIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>Mode</DropdownMenuLabel>
+        <DropdownMenuLabel>Тема</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={mode}>
           <DropdownMenuRadioItem value="light" onClick={() => setMode("light")}>
-            Light
+            Светлая
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="dark" onClick={() => setMode("dark")}>
-            Dark
+            Тёмная
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
             value="system"
             onClick={() => setMode("system")}
           >
-            System
+            Системная
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

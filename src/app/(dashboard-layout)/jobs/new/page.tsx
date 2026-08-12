@@ -72,7 +72,7 @@ export default function NewJobPage() {
     <section className="container flex max-w-2xl flex-col gap-6 p-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          New sanitization job
+          Новая задача санитизации
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Источник → подтверждение → запуск. Профиль санитизации детектируется
@@ -97,7 +97,7 @@ export default function NewJobPage() {
           onClick={() => setTab("dsn")}
           disabled={!isAdmin}
         >
-          По строке подключения {!isAdmin && "(admin)"}
+          По строке подключения {!isAdmin && "(админ)"}
         </TabButton>
         <TabButton active={tab === "file"} onClick={() => setTab("file")}>
           Файл дампа (.sql)
@@ -299,16 +299,16 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
             </Alert>
           )}
           <Field label="Название" value={label} onChange={setLabel} full />
-          <Field label="Host" value={host} onChange={setHost} />
-          <Field label="Port" value={port} onChange={setPort} />
-          <Field label="User" value={dbuser} onChange={setDbuser} />
+          <Field label="Хост" value={host} onChange={setHost} />
+          <Field label="Порт" value={port} onChange={setPort} />
+          <Field label="Пользователь" value={dbuser} onChange={setDbuser} />
           <Field
-            label="Password"
+            label="Пароль"
             value={password}
             onChange={setPassword}
             type="password"
           />
-          <Field label="DB name" value={dbname} onChange={setDbname} />
+          <Field label="Имя БД" value={dbname} onChange={setDbname} />
           <Button type="submit" disabled={busy} className="col-span-2">
             {busy ? "Проверяю подключение…" : "Зарегистрировать источник"}
           </Button>

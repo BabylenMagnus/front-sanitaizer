@@ -25,7 +25,7 @@ export function UserDropdown() {
           variant="outline"
           size="icon"
           className="rounded-lg"
-          aria-label="User"
+          aria-label="Пользователь"
         >
           <Avatar className="size-9">
             <AvatarImage src={userData?.avatar} alt="" />
@@ -44,7 +44,7 @@ export function UserDropdown() {
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col overflow-hidden">
-            <p className="text-sm font-medium truncate">John Doe</p>
+            <p className="text-sm font-medium truncate">{userData?.name}</p>
             <p className="text-xs text-muted-foreground font-semibold truncate">
               {userData?.email}
             </p>
@@ -55,20 +55,20 @@ export function UserDropdown() {
           <DropdownMenuItem asChild>
             <Link href="/">
               <User className="me-2 size-4" />
-              Profile
+              Профиль
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/">
               <UserCog className="me-2 size-4" />
-              Settings
+              Настройки
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <LogOut className="me-2 size-4" />
-          Sign Out
+          Выйти
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

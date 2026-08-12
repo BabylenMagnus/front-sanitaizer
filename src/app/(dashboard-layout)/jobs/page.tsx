@@ -46,14 +46,16 @@ export default function JobsHistoryPage() {
     <section className="container flex flex-col gap-6 p-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Job history</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            История задач
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Все прогоны санитизации через API — своих и чужих, без авторизации
             (см. известные ограничения MVP).
           </p>
         </div>
         <Button asChild>
-          <Link href="/jobs/new">New job</Link>
+          <Link href="/jobs/new">Новая задача</Link>
         </Button>
       </div>
 
@@ -66,7 +68,7 @@ export default function JobsHistoryPage() {
 
       {jobs && jobs.length === 0 && (
         <p className="text-sm text-muted-foreground">
-          Пока ни одного job&apos;а — начни с «New job».
+          Пока ни одной задачи — начни с «Новая задача».
         </p>
       )}
 
@@ -92,9 +94,9 @@ export default function JobsHistoryPage() {
                 <TableCell>{j.source_id}</TableCell>
                 <TableCell>
                   {j.status === "done" ? (
-                    <Badge>done</Badge>
+                    <Badge>готово</Badge>
                   ) : j.status === "error" ? (
-                    <Badge variant="destructive">error</Badge>
+                    <Badge variant="destructive">ошибка</Badge>
                   ) : (
                     <Badge variant="secondary">{STEP_LABELS[j.status]}</Badge>
                   )}

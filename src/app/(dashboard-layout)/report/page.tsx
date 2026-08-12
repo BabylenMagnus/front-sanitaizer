@@ -67,27 +67,28 @@ export default async function ReportPage() {
     <section className="container flex flex-col gap-6 p-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          PII Detection Report
+          Отчёт по обнаружению PII
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Latest completed run: {job.result.source_label},{" "}
-          {new Date(job.created_at).toLocaleString()}. Presidio scanned a sample
-          of real rows per column (not just column names). Findings with a
-          low-precision entity type (ORGANIZATION, DATE_TIME, NRP — known
-          false-positive-prone on short ALLCAPS codes) are surfaced here for
-          human review but not auto-applied to the Greenmask config.
+          Последний завершённый прогон: {job.result.source_label},{" "}
+          {new Date(job.created_at).toLocaleString()}. Presidio просканировал
+          выборку реальных строк по каждой колонке (а не только названия
+          колонок). Находки с низкоточным типом сущности (ORGANIZATION,
+          DATE_TIME, NRP — известны ложными срабатываниями на коротких кодах в
+          верхнем регистре) выводятся здесь для проверки человеком, но не
+          применяются автоматически в конфиге Greenmask.
         </p>
       </div>
 
       <FindingsTable
-        title={`Auto-applied (${autoApplied.length})`}
-        description="Wired into Greenmask's Cmd transformer — these columns are sanitized on every dump."
+        title={`Применено автоматически (${autoApplied.length})`}
+        description="Подключено к Cmd-трансформеру Greenmask — эти колонки очищаются при каждом дампе."
         findings={autoApplied}
       />
 
       <FindingsTable
-        title={`Review-only (${reviewOnly.length})`}
-        description="Flagged as PII candidates but not auto-applied — needs a human decision before masking."
+        title={`Только на проверку (${reviewOnly.length})`}
+        description="Помечено как кандидат на PII, но не применено автоматически — требуется решение человека перед маскированием."
         findings={reviewOnly}
       />
     </section>
@@ -113,13 +114,13 @@ function FindingsTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Table</TableHead>
-              <TableHead>Column</TableHead>
-              <TableHead>Entity type</TableHead>
-              <TableHead>Language</TableHead>
-              <TableHead>Hit ratio</TableHead>
-              <TableHead>Source</TableHead>
-              <TableHead>Identity-linked</TableHead>
+              <TableHead>Таблица</TableHead>
+              <TableHead>Колонка</TableHead>
+              <TableHead>Тип сущности</TableHead>
+              <TableHead>Язык</TableHead>
+              <TableHead>Доля срабатываний</TableHead>
+              <TableHead>Источник</TableHead>
+              <TableHead>Связано с личностью</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -139,7 +140,7 @@ function FindingsTable({
                 </TableCell>
                 <TableCell>
                   {f.identity_linked ? (
-                    <Badge>yes</Badge>
+                    <Badge>да</Badge>
                   ) : (
                     <span className="text-muted-foreground">—</span>
                   )}

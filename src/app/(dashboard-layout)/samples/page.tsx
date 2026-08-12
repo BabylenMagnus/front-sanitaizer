@@ -20,14 +20,13 @@ export default function SamplesPage() {
   return (
     <section className="container flex flex-col gap-6 p-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Before / After
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight">До / После</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Real sample rows, same primary keys, from{" "}
-          <code className="text-xs">original</code> vs{" "}
-          <code className="text-xs">transformed</code>. Same source value always
-          maps to the same replacement (see repeated Bothell → Jimmyview below).
+          Реальные строки с одинаковыми первичными ключами из{" "}
+          <code className="text-xs">original</code> и{" "}
+          <code className="text-xs">transformed</code>. Одно и то же исходное
+          значение всегда заменяется на один и тот же результат (см. повтор
+          Bothell → Jimmyview ниже).
         </p>
       </div>
 
@@ -39,8 +38,8 @@ export default function SamplesPage() {
       />
 
       <PairTable
-        title="person.person + person.emailaddress — cross-table identity"
-        description="Name and derived e-mail stay consistent across two different tables, joined by businessentityid."
+        title="person.person + person.emailaddress — идентичность между таблицами"
+        description="Имя и производный e-mail остаются согласованными в двух разных таблицах, связанных по businessentityid."
         columns={["businessentityid", "firstname", "lastname", "emailaddress"]}
         original={original.identity}
         transformed={transformed.identity}
@@ -55,7 +54,7 @@ export default function SamplesPage() {
 
       <PairTable
         title="person.address — city"
-        description="Same city everywhere in the original (Bothell, WA — Adventure Works HQ) maps to the same replacement everywhere in transformed."
+        description="Один и тот же город в исходных данных везде (Bothell, WA — штаб-квартира Adventure Works) заменяется на один и тот же результат везде после трансформации."
         columns={["addressid", "city"]}
         original={original.address_city}
         transformed={transformed.address_city}
@@ -97,13 +96,13 @@ function PairTable({
       <CardContent className="grid gap-4 lg:grid-cols-2">
         <div>
           <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
-            Original
+            Исходные данные
           </p>
           <SampleTable columns={columns} rows={original} />
         </div>
         <div>
           <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
-            Transformed
+            После трансформации
           </p>
           <SampleTable columns={columns} rows={transformed} />
         </div>

@@ -17,10 +17,10 @@ import { Toaster } from "@/components/ui/toaster"
 export const metadata: Metadata = {
   title: {
     template: "%s | Sanitaizer",
-    default: "Sanitaizer — db-sanitization pipeline report",
+    default: "Sanitaizer — отчёт пайплайна db-sanitization",
   },
   description:
-    "PII detection, before/after samples, and verification metrics for the Greenmask + Presidio + LangGraph db-sanitization pipeline.",
+    "Обнаружение персональных данных, примеры «до/после» и метрики верификации для пайплайна db-sanitization на базе Greenmask + Presidio + LangGraph.",
   metadataBase: new URL(process.env.BASE_URL || "http://localhost:3000"),
 }
 
@@ -43,10 +43,10 @@ export default function RootLayout(props: { children: ReactNode }) {
   const { children } = props
 
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang="ru" dir="ltr" suppressHydrationWarning>
       <body
         className={cn(
-          "[&:lang(en)]:font-lato [&:lang(ar)]:font-cairo", // Set font styles based on the language
+          "[&:lang(en)]:font-lato [&:lang(ru)]:font-lato [&:lang(ar)]:font-cairo", // Set font styles based on the language
           "bg-background text-foreground antialiased overscroll-none", // Set background, text, , anti-aliasing styles, and overscroll behavior
           latoFont.variable, // Include Lato font variable
           cairoFont.variable // Include Cairo font variable

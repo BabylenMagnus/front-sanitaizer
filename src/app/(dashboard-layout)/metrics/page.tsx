@@ -22,32 +22,32 @@ export default function MetricsPage() {
     <section className="container flex flex-col gap-6 p-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          Verification Metrics
+          Метрики верификации
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          From-scratch <code className="text-xs">transformed</code> database,
-          clean dump → restore, checked against{" "}
-          <code className="text-xs">original</code> right after.
+          База <code className="text-xs">transformed</code>, созданная с нуля,
+          чистый dump → restore, сверена с{" "}
+          <code className="text-xs">original</code> сразу после.
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Tables checked" value={metrics.tablesChecked} ok />
+        <MetricCard label="Проверено таблиц" value={metrics.tablesChecked} ok />
         <MetricCard
-          label="Row-count mismatches"
+          label="Расхождений по числу строк"
           value={metrics.rowCountMismatches}
           ok={metrics.rowCountMismatches === 0}
         />
         <MetricCard
-          label="FK constraints restored"
+          label="Восстановлено FK-ограничений"
           value={metrics.fkConstraintsRestored}
-          detail="0 violations on restore"
+          detail="0 нарушений при восстановлении"
           ok
         />
         <MetricCard
-          label="City diversity"
+          label="Разнообразие городов"
           value={`${metrics.diversityTransformed.distinct_city} / ${metrics.diversityOriginal.distinct_city}`}
-          detail="distinct values, transformed / original"
+          detail="уникальных значений, после / до трансформации"
           ok={
             metrics.diversityTransformed.distinct_city ===
             metrics.diversityOriginal.distinct_city
@@ -57,20 +57,20 @@ export default function MetricsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Row counts per table</CardTitle>
+          <CardTitle>Число строк по таблицам</CardTitle>
           <p className="text-sm text-muted-foreground">
-            person / humanresources / sales schemas — every table, not just the
-            ones with PII columns.
+            Схемы person / humanresources / sales — все таблицы, не только те,
+            что содержат PII-колонки.
           </p>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Table</TableHead>
-                <TableHead>Original</TableHead>
-                <TableHead>Transformed</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Таблица</TableHead>
+                <TableHead>Исходно</TableHead>
+                <TableHead>После</TableHead>
+                <TableHead>Статус</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -85,7 +85,7 @@ export default function MetricsPage() {
                     <TableCell>{row.transformed_count}</TableCell>
                     <TableCell>
                       <Badge variant={ok ? "default" : "destructive"}>
-                        {ok ? "OK" : "MISMATCH"}
+                        {ok ? "OK" : "РАСХОЖДЕНИЕ"}
                       </Badge>
                     </TableCell>
                   </TableRow>
@@ -116,7 +116,7 @@ function MetricCard({
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">{label}</p>
           <Badge variant={ok ? "default" : "destructive"}>
-            {ok ? "OK" : "CHECK"}
+            {ok ? "OK" : "ПРОВЕРИТЬ"}
           </Badge>
         </div>
         <p className="text-3xl font-semibold">{value}</p>

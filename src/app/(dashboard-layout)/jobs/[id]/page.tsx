@@ -90,7 +90,7 @@ export default function JobDetailPage() {
   return (
     <section className="container flex flex-col gap-6 p-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Job</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Задача</h1>
         <p className="mt-1 font-mono text-xs text-muted-foreground">
           {params.id}
         </p>
@@ -243,9 +243,9 @@ export default function JobDetailPage() {
                         </TableCell>
                         <TableCell>
                           {f.auto_applied ? (
-                            <Badge>auto-applied</Badge>
+                            <Badge>применено</Badge>
                           ) : (
-                            <Badge variant="secondary">review-only</Badge>
+                            <Badge variant="secondary">на проверку</Badge>
                           )}
                         </TableCell>
                       </TableRow>
@@ -279,7 +279,7 @@ export default function JobDetailPage() {
 }
 
 function StatusBadge({ status }: { status: Job["status"] }) {
-  if (status === "done") return <Badge>done</Badge>
-  if (status === "error") return <Badge variant="destructive">error</Badge>
-  return <Badge variant="secondary">running</Badge>
+  if (status === "done") return <Badge>готово</Badge>
+  if (status === "error") return <Badge variant="destructive">ошибка</Badge>
+  return <Badge variant="secondary">выполняется</Badge>
 }

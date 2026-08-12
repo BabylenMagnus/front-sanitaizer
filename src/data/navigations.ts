@@ -5,42 +5,42 @@ export const navigationsData: NavigationType[] = [
     title: "Sanitaizer",
     items: [
       {
-        title: "Overview",
+        title: "Обзор",
         href: "/",
         iconName: "House",
       },
       {
-        title: "PII Detection Report",
+        title: "Отчёт по PII",
         href: "/report",
         iconName: "ScanSearch",
       },
       {
-        title: "Before / After",
+        title: "До / После",
         href: "/samples",
         iconName: "ArrowLeftRight",
       },
       {
-        title: "Verification Metrics",
+        title: "Метрики верификации",
         href: "/metrics",
         iconName: "ChartBar",
       },
       {
-        title: "Pipeline Logs",
+        title: "Логи пайплайна",
         href: "/logs",
         iconName: "Terminal",
       },
     ],
   },
   {
-    title: "Live Jobs (MVP)",
+    title: "Задачи (Live Jobs)",
     items: [
       {
-        title: "New Job",
+        title: "Новая задача",
         href: "/jobs/new",
         iconName: "Play",
       },
       {
-        title: "Job History",
+        title: "История задач",
         href: "/jobs",
         iconName: "History",
       },

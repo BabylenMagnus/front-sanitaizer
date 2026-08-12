@@ -22,27 +22,27 @@ export default function HomePage() {
 
   const stats = [
     {
-      label: "PII columns found",
+      label: "Найдено PII-колонок",
       value: report.length,
-      detail: `${autoApplied} auto-applied / ${reviewOnly} review-only`,
+      detail: `${autoApplied} применено автоматически / ${reviewOnly} только на проверку`,
       href: "/report",
     },
     {
-      label: "Tables verified",
+      label: "Проверено таблиц",
       value: metrics.tablesChecked,
-      detail: `${metrics.rowCountMismatches} row-count mismatches`,
+      detail: `${metrics.rowCountMismatches} расхождений по числу строк`,
       href: "/metrics",
     },
     {
-      label: "FK constraints restored",
+      label: "Восстановлено FK-ограничений",
       value: metrics.fkConstraintsRestored,
-      detail: "clean restore, no violations",
+      detail: "чистое восстановление, нарушений нет",
       href: "/metrics",
     },
     {
-      label: "City diversity preserved",
+      label: "Сохранено разнообразие городов",
       value: `${metrics.diversityTransformed.distinct_city} / ${metrics.diversityOriginal.distinct_city}`,
-      detail: "distinct values, transformed / original",
+      detail: "уникальных значений, после / до трансформации",
       href: "/samples",
     },
   ]
@@ -51,11 +51,12 @@ export default function HomePage() {
     <section className="container flex flex-col gap-6 p-4">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          db-sanitization pipeline report
+          Отчёт пайплайна db-sanitization
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {meta.dataset} — Greenmask + Presidio + LangGraph. Static snapshot of
-          the last verified run, generated {meta.generatedAt}. Source:{" "}
+          {meta.dataset} — Greenmask + Presidio + LangGraph. Статичный снимок
+          последнего проверенного прогона, сформирован {meta.generatedAt}.
+          Источник:{" "}
           <a
             className="underline underline-offset-2"
             href={meta.sourceRepo}
@@ -86,29 +87,28 @@ export default function HomePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>What this site shows</CardTitle>
+          <CardTitle>Что показывает этот сайт</CardTitle>
           <CardDescription>
-            This is a report, not a live dashboard — it doesn&apos;t connect
-            back to the pipeline&apos;s Docker containers. Everything below was
-            baked in at build time from one verified end-to-end run.
+            Это отчёт, а не живой дашборд — он не подключён к Docker-контейнерам
+            пайплайна. Всё ниже зафиксировано на этапе сборки по одному
+            проверенному сквозному прогону.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2 text-sm">
-          <Row href="/report" title="PII Detection Report">
-            Presidio findings per column — entity type, detected language,
-            auto-applied vs review-only.
+          <Row href="/report" title="Отчёт по PII">
+            Находки Presidio по каждой колонке — тип сущности, определённый
+            язык, применено автоматически или требует проверки.
           </Row>
-          <Row href="/samples" title="Before / After">
-            Real sample rows from the original vs sanitized database, side by
-            side.
+          <Row href="/samples" title="До / После">
+            Реальные строки из исходной и очищенной базы данных, бок о бок.
           </Row>
-          <Row href="/metrics" title="Verification Metrics">
-            Row-count parity, referential integrity, and diversity checks across
-            all 37 tables.
+          <Row href="/metrics" title="Метрики верификации">
+            Совпадение числа строк, целостность ссылок и проверки разнообразия
+            по всем 37 таблицам.
           </Row>
-          <Row href="/logs" title="Pipeline Logs">
-            Raw output from the last detector / generator / greenmask
-            dump+restore run.
+          <Row href="/logs" title="Логи пайплайна">
+            Необработанный вывод последнего прогона detector / generator /
+            greenmask dump+restore.
           </Row>
         </CardContent>
       </Card>

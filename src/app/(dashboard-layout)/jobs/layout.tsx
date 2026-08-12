@@ -28,7 +28,7 @@ export default function JobsAuthGate({
     <div>
       <div className="flex items-center justify-end gap-2 border-b p-2 text-sm text-muted-foreground">
         {session.user.email} (
-        {(session.user as { role?: string }).role || "user"})
+        {(session.user as { role?: string }).role || "пользователь"})
         <Button
           variant="ghost"
           size="sm"
