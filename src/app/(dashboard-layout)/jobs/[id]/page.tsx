@@ -142,21 +142,23 @@ export default function JobDetailPage() {
               </div>
               <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
                 <span>
-                  Шаг {Math.max(currentStepIndex, 0) + 1} из{" "}
-                  {STEP_ORDER.length}: пайплайн выполняется целиком (detector →
-                  generator → dump → restore), прогресс — по шагам, не по
-                  таблицам внутри шага — см. известные ограничения MVP.
+                  Шаг {Math.max(currentStepIndex, 0) + 1} из {STEP_ORDER.length}
+                  : пайплайн выполняется целиком (detector → generator → dump →
+                  restore), прогресс — по шагам, не по таблицам внутри шага —
+                  см. известные ограничения MVP.
                 </span>
               </div>
               {isRunning && (
                 <p className="mt-1 text-xs">
                   {sinceUpdateSeconds < 20 ? (
                     <span className="text-emerald-500">
-                      ● живой процесс — активность {Math.round(sinceUpdateSeconds)}с назад
+                      ● живой процесс — активность{" "}
+                      {Math.round(sinceUpdateSeconds)}с назад
                     </span>
                   ) : (
                     <span className="text-amber-500">
-                      ● нет обновлений уже {formatDuration(sinceUpdateSeconds)} — возможно, зависло
+                      ● нет обновлений уже {formatDuration(sinceUpdateSeconds)}{" "}
+                      — возможно, зависло
                     </span>
                   )}
                 </p>
@@ -185,7 +187,8 @@ export default function JobDetailPage() {
                             ? formatDuration(t.duration_seconds)
                             : t?.started_at
                               ? `${formatDuration(
-                                  (now - new Date(t.started_at).getTime()) / 1000
+                                  (now - new Date(t.started_at).getTime()) /
+                                    1000
                                 )}…`
                               : "—"}
                         </span>
