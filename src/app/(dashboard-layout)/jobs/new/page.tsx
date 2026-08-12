@@ -188,6 +188,7 @@ function TabButton({
 }) {
   return (
     <button
+      type="button"
       disabled={disabled}
       onClick={onClick}
       className={`flex-1 rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${
@@ -248,12 +249,19 @@ function SourceListStep({
 }
 
 function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
+  const [mode, setMode] = useState<"form" | "url">("form")
   const [label, setLabel] = useState("")
+  
+  // form mode
   const [host, setHost] = useState("")
   const [port, setPort] = useState("5432")
   const [dbuser, setDbuser] = useState("postgres")
   const [password, setPassword] = useState("")
   const [dbname, setDbname] = useState("")
+  
+  // url mode
+  const [url, setUrl] = useState("")
+
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -261,14 +269,37 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
     e.preventDefault()
     setBusy(true)
     setError(null)
+    
+    let submitHost = host
+    let submitPort = port
+    let submitUser = dbuser
+    let submitPass = password
+    let submitDb = dbname
+
+    if (mode === "url") {
+      try {
+        const parsed = new URL(url)
+        if (!parsed.protocol.startsWith("postgres")) throw new Error("Неверный протокол, ожидается postgres://")
+        submitHost = parsed.hostname
+        submitPort = parsed.port || "5432"
+        submitUser = parsed.username || "postgres"
+        submitPass = parsed.password || ""
+        submitDb = parsed.pathname.replace("/", "") || "postgres"
+      } catch (err) {
+        setError("Неверный формат URL подключения (ожидается postgres://user:pass@host:port/db)")
+        setBusy(false)
+        return
+      }
+    }
+
     try {
       const { source_id } = await registerDsnSource({
         label,
-        host,
-        port,
-        dbuser,
-        password,
-        dbname,
+        host: submitHost,
+        port: submitPort,
+        dbuser: submitUser,
+        password: submitPass,
+        dbname: submitDb,
       })
       onRegistered(source_id)
     } catch (e) {
@@ -291,25 +322,47 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={submit} className="grid grid-cols-2 gap-3">
+        <form onSubmit={submit} className="flex flex-col gap-4">
           {error && (
-            <Alert variant="destructive" className="col-span-2">
+            <Alert variant="destructive">
               <AlertTitle>Не удалось подключиться</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          <Field label="Название" value={label} onChange={setLabel} full />
-          <Field label="Хост" value={host} onChange={setHost} />
-          <Field label="Порт" value={port} onChange={setPort} />
-          <Field label="Пользователь" value={dbuser} onChange={setDbuser} />
-          <Field
-            label="Пароль"
-            value={password}
-            onChange={setPassword}
-            type="password"
-          />
-          <Field label="Имя БД" value={dbname} onChange={setDbname} />
-          <Button type="submit" disabled={busy} className="col-span-2">
+          
+          <div className="flex gap-1 rounded-md border p-1 w-full max-w-xs mb-2">
+            <TabButton active={mode === "form"} onClick={() => setMode("form")}>
+              Форма
+            </TabButton>
+            <TabButton active={mode === "url"} onClick={() => setMode("url")}>
+              URL
+            </TabButton>
+          </div>
+
+          <Field label="Название" value={label} onChange={setLabel} />
+          
+          {mode === "form" ? (
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Хост" value={host} onChange={setHost} />
+              <Field label="Порт" value={port} onChange={setPort} />
+              <Field label="Пользователь" value={dbuser} onChange={setDbuser} />
+              <Field
+                label="Пароль"
+                value={password}
+                onChange={setPassword}
+                type="password"
+              />
+              <Field label="Имя БД" value={dbname} onChange={setDbname} />
+            </div>
+          ) : (
+            <Field 
+              label="URL подключения (postgres://...)" 
+              value={url} 
+              onChange={setUrl} 
+            />
+          )}
+
+          <Button type="submit" disabled={busy} className="mt-2 w-full">
             {busy ? "Проверяю подключение…" : "Зарегистрировать источник"}
           </Button>
         </form>
@@ -323,6 +376,26 @@ function UploadStep({ onUploaded }: { onUploaded: (id: string) => void }) {
   const [file, setFile] = useState<File | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [dragActive, setDragActive] = useState(false)
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true)
+    } else if (e.type === "dragleave") {
+      setDragActive(false)
+    }
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDragActive(false)
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      setFile(e.dataTransfer.files[0])
+    }
+  }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -359,15 +432,39 @@ function UploadStep({ onUploaded }: { onUploaded: (id: string) => void }) {
           )}
           <Field label="Название" value={label} onChange={setLabel} full />
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="file">Файл (.sql)</Label>
-            <input
-              id="file"
-              type="file"
-              accept=".sql"
-              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              className="text-sm"
-              required
-            />
+            <Label>Файл (.sql)</Label>
+            <div 
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+              className={`relative flex min-h-[120px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors ${dragActive ? "border-primary bg-primary/10" : "border-muted-foreground/25 hover:bg-accent/50"} ${file ? "bg-accent/50" : ""}`}
+            >
+              <input
+                id="file"
+                type="file"
+                accept=".sql"
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                className="absolute inset-0 z-50 h-full w-full cursor-pointer opacity-0"
+                required={!file}
+              />
+              <div className="flex flex-col items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                {file ? (
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium">{file.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {(file.size / 1024 / 1024).toFixed(2)} MB
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm font-medium">Перетащите файл сюда или нажмите для выбора</p>
+                    <p className="text-xs text-muted-foreground">Только .sql файлы до 500 МБ</p>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
           <Button type="submit" disabled={busy || !file}>
             {busy ? "Загружаю и разворачиваю…" : "Загрузить"}
