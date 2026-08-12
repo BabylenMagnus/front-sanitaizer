@@ -26,7 +26,9 @@ async function main() {
     },
   })
 
-  console.log(`Created ${role === "admin" ? "admin" : "user"}: ${result.user.email} (id: ${result.user.id})`)
+  console.log(
+    `Created ${role === "admin" ? "admin" : "user"}: ${result.user.email} (id: ${result.user.id})`
+  )
 }
 
 main().catch((err) => {

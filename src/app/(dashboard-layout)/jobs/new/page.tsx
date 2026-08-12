@@ -251,14 +251,14 @@ function SourceListStep({
 function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
   const [mode, setMode] = useState<"form" | "url">("form")
   const [label, setLabel] = useState("")
-  
+
   // form mode
   const [host, setHost] = useState("")
   const [port, setPort] = useState("5432")
   const [dbuser, setDbuser] = useState("postgres")
   const [password, setPassword] = useState("")
   const [dbname, setDbname] = useState("")
-  
+
   // url mode
   const [url, setUrl] = useState("")
 
@@ -269,7 +269,7 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
     e.preventDefault()
     setBusy(true)
     setError(null)
-    
+
     let submitHost = host
     let submitPort = port
     let submitUser = dbuser
@@ -279,14 +279,17 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
     if (mode === "url") {
       try {
         const parsed = new URL(url)
-        if (!parsed.protocol.startsWith("postgres")) throw new Error("Неверный протокол, ожидается postgres://")
+        if (!parsed.protocol.startsWith("postgres"))
+          throw new Error("Неверный протокол, ожидается postgres://")
         submitHost = parsed.hostname
         submitPort = parsed.port || "5432"
         submitUser = parsed.username || "postgres"
         submitPass = parsed.password || ""
         submitDb = parsed.pathname.replace("/", "") || "postgres"
-      } catch (err) {
-        setError("Неверный формат URL подключения (ожидается postgres://user:pass@host:port/db)")
+      } catch (_err) {
+        setError(
+          "Неверный формат URL подключения (ожидается postgres://user:pass@host:port/db)"
+        )
         setBusy(false)
         return
       }
@@ -329,7 +332,7 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <div className="flex gap-1 rounded-md border p-1 w-full max-w-xs mb-2">
             <TabButton active={mode === "form"} onClick={() => setMode("form")}>
               Форма
@@ -340,7 +343,7 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
           </div>
 
           <Field label="Название" value={label} onChange={setLabel} />
-          
+
           {mode === "form" ? (
             <div className="grid grid-cols-2 gap-3">
               <Field label="Хост" value={host} onChange={setHost} />
@@ -355,10 +358,10 @@ function DsnStep({ onRegistered }: { onRegistered: (id: string) => void }) {
               <Field label="Имя БД" value={dbname} onChange={setDbname} />
             </div>
           ) : (
-            <Field 
-              label="URL подключения (postgres://...)" 
-              value={url} 
-              onChange={setUrl} 
+            <Field
+              label="URL подключения (postgres://...)"
+              value={url}
+              onChange={setUrl}
             />
           )}
 
@@ -433,7 +436,7 @@ function UploadStep({ onUploaded }: { onUploaded: (id: string) => void }) {
           <Field label="Название" value={label} onChange={setLabel} full />
           <div className="flex flex-col gap-1.5">
             <Label>Файл (.sql)</Label>
-            <div 
+            <div
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
@@ -449,7 +452,22 @@ function UploadStep({ onUploaded }: { onUploaded: (id: string) => void }) {
                 required={!file}
               />
               <div className="flex flex-col items-center justify-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-muted-foreground"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" x2="12" y1="3" y2="15" />
+                </svg>
                 {file ? (
                   <div className="flex flex-col gap-1">
                     <span className="font-medium">{file.name}</span>
@@ -459,8 +477,12 @@ function UploadStep({ onUploaded }: { onUploaded: (id: string) => void }) {
                   </div>
                 ) : (
                   <>
-                    <p className="text-sm font-medium">Перетащите файл сюда или нажмите для выбора</p>
-                    <p className="text-xs text-muted-foreground">Только .sql файлы до 500 МБ</p>
+                    <p className="text-sm font-medium">
+                      Перетащите файл сюда или нажмите для выбора
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Только .sql файлы до 500 МБ
+                    </p>
                   </>
                 )}
               </div>
